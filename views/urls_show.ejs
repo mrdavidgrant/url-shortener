@@ -4,9 +4,10 @@
   <title>TinyApp</title>
 </head>
 <body>
+    <%- include('partials/_header') %>
     <!-- Add your EJS code here -->
     <div>
-      <p><%= short %> : <%= long %></p>
+      <p><%= short %> : <a href="<%= long %>"><%= long %></a></p>
 
     <a href="#">Click here</a> to add a new shortened link!
 </body>

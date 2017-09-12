@@ -14,7 +14,7 @@ var urlDatabase = [
 
 app.use(function(req, res, next) {
   console.log(`New Request: ${req.method} ${req.url}`)
-  console.log(req)
+  // console.log(req)
   next()
 })
 
@@ -33,7 +33,7 @@ app.get("/urls/:id", (req, res) => {
   const url = urlDatabase.filter((url) => {
     return url.short == req.params.id
   })[0]
-
+  // console.log(url)
   res.render('urls_show', {
     short: url.short,
     long: url.long

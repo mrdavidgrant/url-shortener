@@ -5,11 +5,12 @@
     <%- include('partials/_header') %>
     <!-- Add your EJS code here -->
     <ul>
-    <% urls.forEach ((url) => { %>
-      <li><a href="<%= url.short %>"><%= url.short %></a> : <a href="<%= url.long %>"><%= url.long %></a></li>
-    <% }) %>
+      <% console.log('logging URL', url) %>
+     <% for (key in url) { %>
+       <li><a href="<%= key %>"><%= key %></a> : <a href="<%= url[key] %>"><%= url[key] %></a></li>
+    <% } %>
     </ul>
 
-    <a href="#">Click here</a> to add a new shortened link!
+    <a href="/urls/new">Click here</a> to add a new shortened link!
 </body>
 </html>

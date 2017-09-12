@@ -5,11 +5,8 @@
 </head>
 <body>
     <!-- Add your EJS code here -->
-    <ul>
-    <% urls.forEach ((url) => { %>
-      <li><%= url.short %> : <a href="<%= url.long %>"><%= url.long %></a></li>
-    <% }) %>
-    </ul>
+    <div>
+      <p><%= short %> : <%= long %></p>
 
     <a href="#">Click here</a> to add a new shortened link!
 </body>

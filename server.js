@@ -32,19 +32,38 @@ app.get("/urls/new", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  // debug statement to see POST parameters
-
-  res.send(`Ok => ${req.body.longURL}`);   
+  let id = generateRandomString()
+  urlDatabase[id] = req.body.longURL
+  res.redirect(`/urls/${id}`);   
 });
 
+app.get("/u/:shortURL", (req, res) => {
+  console.log(req.params.shortURL)
+  let longURL = ''
+  for (key in urlDatabase) {
+    if (key == req.params.shortURL) {
+      console.log(`setting longURL to ${urlDatabase[key]}`)
+      longURL = urlDatabase[key]
+      res.status(307).redirect(longURL)
+      break
+    }
+  }
+})
+
 app.get("/urls/:id", (req, res) => {
-  // console.log(urlDatabase)
+  console.log(urlDatabase)
   let url = {}
   for (key in urlDatabase) {
     if (key == req.params.id) {
+      console.log(`Checking key ${key}`)
       url.key = key
       url.actual = urlDatabase[key]
-      console.log(url)
+      console.log(`Found key: [${url.key} : ${url.actual}]`)
+      break
     }
+  }
+  if (!url.key) {
+    res.redirect('/urls')
   }
   res.render('urls_show', {
     short: url.key,
@@ -57,12 +76,8 @@ app.listen(PORT, () => {
 })
 
 function generateRandomString() {
-  var mask = '';
-  if (chars.indexOf('a') > -1) mask += 'abcdefghijklmnopqrstuvwxyz';
-  if (chars.indexOf('A') > -1) mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  if (chars.indexOf('#') > -1) mask += '0123456789';
-  if (chars.indexOf('!') > -1) mask += '~`!@#$%^&*()_+-={}[]:";\'<>?,./|\\';
+  var mask = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   var result = '';
   for (var i = 6; i > 0; --i) result += mask[Math.floor(Math.random() * mask.length)];
   return result;
-  }
+}

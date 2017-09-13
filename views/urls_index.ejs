@@ -7,7 +7,7 @@
     <ul>
       <% console.log('logging URL', url) %>
      <% for (key in url) { %>
-       <li><a href="<%= key %>"><%= key %></a> : <a href="<%= url[key] %>"><%= url[key] %></a></li>
+       <li><a href="/urls/<%= key %>"><%= key %></a> : <a href="<%= url[key] %>"><%= url[key] %></a></li>
     <% } %>
     </ul>
 

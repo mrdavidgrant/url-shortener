@@ -17,11 +17,7 @@ app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use((req, res, next) => { 
-  if (req.cookies.username) {
-    req.user = req.cookies.username
-  } else {
-    req.user = ''
-  }
+  req.user = req.cookies.user_id
   next() 
 }) 
 app.use(morgan('dev'))
@@ -77,7 +73,7 @@ app.post('/login', (req, res) => {
 })
 
 app.post('/logout', (req, res) => {
-  res.clearCookie('username', req.cookies.username)
+  res.clearCookie('user_id', req.cookies.user_id)
   res.redirect('/urls')
 })
 
@@ -86,10 +82,16 @@ app.get('/register', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
-  id = userDB.addUser(req.body.email, req.body.password)
-  console.log(id)
-  res.cookie('user_id', id.id)
-  res.redirect('/urls')
+  let verified = userDB.verify(req.body.email, req.body.password)
+  console.log(verified)
+  if (verified[0] != 200) {
+    res.status(verified[0]).send(verified[1])
+  } else {
+    id = userDB.addUser(req.body.email, req.body.password)
+    console.log('ID Created:', id.email)
+    res.cookie('user_id', id.id)
+    res.redirect('/urls')
+  }
 })
 
 app.listen(PORT, () => {

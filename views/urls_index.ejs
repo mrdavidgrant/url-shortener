@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<style>
-  form {
-    display: inline
-  }
-</style>
 
-<body style="font-size:20px; padding:50px;">
-  <div class="container">
+<body style="font-size:20px; padding:50px; width:100%">
     <%- include('partials/_header') %>
     <!-- Add your EJS code here -->
-    <ul>
+    <ul >
      <% for (key in url) { %>
        <li><a href="/urls/<%= key %>"><%= key %></a> : <a href="<%= url[key] %>"><%= url[key] %></a> : <form button type="submit" method="GET" action="/urls/<%= key %>/edit"><input type='submit' value="Edit"></form> <form button type="submit" method="POST" action="/urls/<%= key %>?_method=DELETE"><input type='submit' value="Delete"></form></li>
     <% } %>

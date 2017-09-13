@@ -2,10 +2,19 @@
   <title>Tiny App</title>
 </head>
 <h1>Tiny App</h1>
-
-<a href="/urls">My URLS</a> : <a href="/urls/new">New Link</a>
+<style>
+  form {
+    display: inline
+  }
+</style>
+<a href="/urls">My URLS</a> : <a href="/urls/new">New Link</a><span style="align: right">
+<% if (user) { %>
+Welcome <strong><%- user %></strong> : <form action="/logout" method="POST" style="margin:150px; display:inline"><input type="submit" value="Logout">
+<% } else { %> 
 <form action="/login" method="POST" style="margin:150px;">
-      <label for="username" style="display: inline">Username:</label>
-      <input id="username" type="text" name="username" style="width: 100px display: inline">
-      <input type="submit" value="Submit">
-    </form>
+  <label for="username" style="display:inline">Username:</label>
+  <input id="username" type="text" name="username" style="width: 100px display: inline">
+  <input type="submit" value="Submit">
+</form> <% } %></span>
+<hr>
+ 

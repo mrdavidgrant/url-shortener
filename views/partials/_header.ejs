@@ -7,14 +7,15 @@
     display: inline
   }
 </style>
-<a href="/urls">My URLS</a> : <a href="/urls/new">New Link</a><span style="align: right">
+<a href="/urls">My URLS</a> : <a href="/urls/new">New Link</a>
 <% if (user) { %>
-Welcome <strong><%- user %></strong> : <form action="/logout" method="POST" style="margin:150px; display:inline"><input type="submit" value="Logout">
+<span> &nbsp &nbsp &nbsp &nbsp &nbsp Welcome <strong><%- user %></strong> : <form action="/logout" method="POST" style="display:inline"><input type="submit" value="Logout"></span style="clear: both;">
 <% } else { %> 
 <form action="/login" method="POST" style="margin:150px;">
   <label for="username" style="display:inline">Username:</label>
   <input id="username" type="text" name="username" style="width: 100px display: inline">
   <input type="submit" value="Submit">
-</form> <% } %></span>
-<hr>
+</form> <% } %>
+
+<hr style="clear: right;">
  

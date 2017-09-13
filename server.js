@@ -2,14 +2,15 @@ var express = require('express')
 const morgan = require('morgan')
 const bodyParser = require("body-parser");
 const urlDatabase = require('./urlDatabase')
+var methodOverride = require('method-override')
 var app = express()
 
 var PORT = process.env.PORT || 8080
 
 app.set('view engine', 'ejs')
 
+app.use(methodOverride('_method'))
 app.use(morgan('dev'))
-
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
@@ -39,6 +40,11 @@ app.get("/urls/:id", (req, res) => {
   // console.log(req.params.id)
   let url = urlDatabase.getSingle(req.params.id)
   res.render('urls_show', {url: url})
+})
+
+app.delete('/urls/:id/', (req, res) =>{
+  urlDatabase.deletePair(req.params.id)
+  res.redirect('/urls')
 })
 
 app.listen(PORT, () => {

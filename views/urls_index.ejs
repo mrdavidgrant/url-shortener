@@ -6,7 +6,7 @@
     <!-- Add your EJS code here -->
     <ul>
      <% for (key in url) { %>
-       <li><a href="/urls/<%= key %>"><%= key %></a> : <a href="<%= url[key] %>"><%= url[key] %></a></li>
+       <li><a href="/urls/<%= key %>"><%= key %></a> : <a href="<%= url[key] %>"><%= url[key] %></a><form method="POST" action="/urls/<%= key %>?_method=DELETE"><button>DELETE</button></form></li>
     <% } %>
     </ul>
 

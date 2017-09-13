@@ -30,7 +30,27 @@ function verify (email, password) {
   return [200]
 }
 
+function getUser (userInfo) {
+  for (id in users) {
+    if (users[id].id == userInfo || users[id].email == userInfo) {
+      return users[id]
+      break
+    }
+  }
+}
+
+function verifyUser (email, password) {
+  let user = getUser(email)
+  if (user.password === password) {
+    return true
+  } else {
+    return false
+  }
+}
+
 module.exports = {
   addUser: addUser,
-  verify: verify
+  verify: verify,
+  getUser: getUser,
+  verifyUser: verifyUser
 }

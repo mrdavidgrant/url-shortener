@@ -17,13 +17,21 @@ app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use((req, res, next) => { 
-  req.user = req.cookies.user_id
+  if (userDB.getUser(req.cookies.user_id)) {
+    req.user = userDB.getUser(req.cookies.user_id).email
+  } else {
+    req.user = 0
+  }
   next() 
 }) 
 app.use(morgan('dev'))
 
 app.get('/', (req, res) => {
   res.redirect('/urls')
+})
+
+app.get('/login', (req, res) => {
+  res.render('login', {user: req.user})
 })
 
 app.get('/urls', (req, res) => {
@@ -68,8 +76,13 @@ app.delete('/urls/:id/', (req, res) =>{
 })
 
 app.post('/login', (req, res) => {
-  res.cookie('username', req.body.username)
-  res.redirect('/urls')
+  if (userDB.verifyUser(req.body.email, req.body.password)) {
+    let user = userDB.getUser(req.body.email)
+    res.cookie('user_id', user.id)
+    res.redirect('/urls')
+  } else {
+    res.redirect('/login')
+  }
 })
 
 app.post('/logout', (req, res) => {

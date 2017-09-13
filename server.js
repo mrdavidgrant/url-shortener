@@ -1,17 +1,21 @@
-var express = require('express')
+`use strict`
+const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require("body-parser");
 const urlDatabase = require('./urlDatabase')
-var methodOverride = require('method-override')
-var app = express()
+const methodOverride = require('method-override')
+const cookieParser = require('cookie-parser')
 
-var PORT = process.env.PORT || 8080
+const app = express()
+
+const PORT = process.env.PORT || 8080
 
 app.set('view engine', 'ejs')
 
 app.use(methodOverride('_method'))
 app.use(morgan('dev'))
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(cookieParser())
 
 app.get('/', (req, res) => {
   res.redirect('/urls')

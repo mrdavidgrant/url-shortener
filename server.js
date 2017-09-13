@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const urlDatabase = require('./urlDatabase')
 const methodOverride = require('method-override')
 const cookieParser = require('cookie-parser')
+const userDB = require('./userDB')
 
 const app = express()
 
@@ -16,7 +17,11 @@ app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use((req, res, next) => { 
-  req.user = req.cookies.username
+  if (req.cookies.username) {
+    req.user = req.cookies.username
+  } else {
+    req.user = ''
+  }
   next() 
 }) 
 app.use(morgan('dev'))
@@ -73,6 +78,17 @@ app.post('/login', (req, res) => {
 
 app.post('/logout', (req, res) => {
   res.clearCookie('username', req.cookies.username)
+  res.redirect('/urls')
+})
+
+app.get('/register', (req, res) => {
+  res.render('register', {user: req.user})
+})
+
+app.post('/register', (req, res) => {
+  id = userDB.addUser(req.body.email, req.body.password)
+  console.log(id)
+  res.cookie('user_id', id.id)
   res.redirect('/urls')
 })
 

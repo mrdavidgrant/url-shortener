@@ -1,4 +1,6 @@
-var urlDatabase = {
+const apps = require('./apps')
+
+let urlDatabase = {
   "b2xVn2":"http://www.lighthouselabs.ca",
   "9sm5xK":"http://www.google.com"
 }
@@ -8,7 +10,7 @@ function getAll() {
 }
 
 function addPair (url) {
-  key = generateRandomString()
+  key = apps.random(6)
   urlDatabase[key] = url
   return getSingle(key)
 }
@@ -33,13 +35,6 @@ function getSingle(id) {
     }
   }
   return url
-}
-
-function generateRandomString() {
-  var mask = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  var result = '';
-  for (var i = 6; i > 0; --i) result += mask[Math.floor(Math.random() * mask.length)];
-  return result;
 }
 
 module.exports = {

@@ -39,35 +39,20 @@ app.post("/urls", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   console.log(req.params.shortURL)
-  let longURL = ''
-  for (key in urlDatabase) {
-    if (key == req.params.shortURL) {
-      console.log(`setting longURL to ${urlDatabase[key]}`)
-      longURL = urlDatabase[key]
-      res.status(307).redirect(longURL)
-      break
-    }
-  }
+  let url = getKeyPair(req.params.shortURL)
+  res.status(307).redirect(url.long)
 })
 
 app.get("/urls/:id", (req, res) => {
-  console.log(urlDatabase)
-  let url = {}
-  for (key in urlDatabase) {
-    if (key == req.params.id) {
-      console.log(`Checking key ${key}`)
-      url.key = key
-      url.actual = urlDatabase[key]
-      console.log(`Found key: [${url.key} : ${url.actual}]`)
-      break
-    }
-  }
-  if (!url.key) {
-    res.redirect('/urls')
-  }
+  console.log(req.params.id)
+  url = getKeyPair(req.params.id)
+  console.log(url)
+  // if (!url.key) {
+  //   res.redirect('/urls')
+  // }
   res.render('urls_show', {
-    short: url.key,
-    long: url.actual
+    short: url.short,
+    long: url.long
   })
 })
 
@@ -80,4 +65,16 @@ function generateRandomString() {
   var result = '';
   for (var i = 6; i > 0; --i) result += mask[Math.floor(Math.random() * mask.length)];
   return result;
+}
+
+function getKeyPair(id) {
+  let url = {}
+  for (key in urlDatabase) {
+    if (key == id) {
+      url.short = key
+      url.long = urlDatabase[key]
+      break
+    }
+  }
+  return url
 }

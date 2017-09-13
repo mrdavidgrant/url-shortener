@@ -1,29 +1,24 @@
 var express = require('express')
-var app = express()
+const morgan = require('morgan')
 const bodyParser = require("body-parser");
+const urlDatabase = require('./urlDatabase')
+var app = express()
+
 var PORT = process.env.PORT || 8080
 
 app.set('view engine', 'ejs')
 
-var urlDatabase = {
-  "b2xVn2":"http://www.lighthouselabs.ca",
-  "9sm5xK":"http://www.google.com"
-}
-
-app.use(function(req, res, next) {
-  console.log(`New Request: ${req.method} ${req.url}`)
-  // console.log(req)
-  next()
-})
+app.use(morgan('dev'))
 
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
-  res.end('Hello!')
+  res.redirect('/urls')
 })
 
 app.get('/urls', (req, res) => {
-  res.render('urls_index', {url  :urlDatabase})
+  let data = urlDatabase.getAll()
+  res.render('urls_index', {url  :data})
 })
 
 app.get("/urls/new", (req, res) => {
@@ -31,50 +26,24 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // debug statement to see POST parameters
-  let id = generateRandomString()
-  urlDatabase[id] = req.body.longURL
+  let id = urlDatabase.addPair(req.body.longURL).short
   res.redirect(`/urls/${id}`);   
 });
 
-app.get("/u/:shortURL", (req, res) => {
-  console.log(req.params.shortURL)
-  let url = getKeyPair(req.params.shortURL)
+app.get("/u/:id", (req, res) => {
+  let url = urlDatabase.getSingle(req.params.id)
   res.status(307).redirect(url.long)
 })
 
 app.get("/urls/:id", (req, res) => {
-  console.log(req.params.id)
-  url = getKeyPair(req.params.id)
-  console.log(url)
-  // if (!url.key) {
-  //   res.redirect('/urls')
-  // }
-  res.render('urls_show', {
-    short: url.short,
-    long: url.long
-  })
+  // console.log(req.params.id)
+  let url = urlDatabase.getSingle(req.params.id)
+  res.render('urls_show', {url: url})
 })
 
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`)
 })
 
-function generateRandomString() {
-  var mask = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  var result = '';
-  for (var i = 6; i > 0; --i) result += mask[Math.floor(Math.random() * mask.length)];
-  return result;
-}
 
-function getKeyPair(id) {
-  let url = {}
-  for (key in urlDatabase) {
-    if (key == id) {
-      url.short = key
-      url.long = urlDatabase[key]
-      break
-    }
-  }
-  return url
-}
+

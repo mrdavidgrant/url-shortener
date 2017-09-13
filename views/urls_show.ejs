@@ -7,7 +7,7 @@
     <%- include('partials/_header') %>
     <!-- Add your EJS code here -->
     <div>
-      <p><%= short %> : <a href="<%= long %>"><%= long %></a></p>
+      <p><a href="/u/<%= url.short %>"><%= url.short %></a> : <a href="<%= url.long %>"><%= url.long %></a></p>
 
     <a href="/urls/new">Click here</a> to add a new shortened link!
 </body>

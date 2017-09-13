@@ -36,6 +36,17 @@ app.get("/u/:id", (req, res) => {
   res.status(307).redirect(url.long)
 })
 
+app.get("/urls/:id/edit", (req, res) => {
+  // console.log(req.params.id)
+  let url = urlDatabase.getSingle(req.params.id)
+  res.render('urls_edit', {url: url})
+})
+
+app.patch('/urls/:id', (req, res) => {
+  urlDatabase.editPair(req.params.id, req.body.longURL)
+  res.redirect('/urls')
+})
+
 app.get("/urls/:id", (req, res) => {
   // console.log(req.params.id)
   let url = urlDatabase.getSingle(req.params.id)

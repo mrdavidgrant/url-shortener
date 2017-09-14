@@ -7,9 +7,9 @@
     display: inline
   }
 </style>
-<a href="/urls">My URLS</a> : <a href="/urls/new">New Link</a>
+<a href="/urls">My URLS</a> | <a href="/urls/new">New Link</a> | 
 <% if (user != 0) { %>
-<span> &nbsp &nbsp &nbsp &nbsp &nbsp Welcome <strong><%- user %></strong> : <form action="/logout" method="POST" style="display:inline"><input type="submit" value="Logout"></span style="clear: both;">
+<span> &nbsp &nbsp &nbsp &nbsp &nbsp Welcome <strong><%- user.email %></strong> : <form action="/logout" method="POST" style="display:inline"><input type="submit" value="Logout"></form></span>
 <% } else { %> 
 <a href="./login">Login</a> | <a href="./register">Register</a> <% } %>
 

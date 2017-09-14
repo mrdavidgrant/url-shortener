@@ -18,10 +18,11 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use((req, res, next) => { 
   if (userDB.getUser(req.cookies.user_id)) {
-    req.user = userDB.getUser(req.cookies.user_id).email
+    req.user = userDB.getUser(req.cookies.user_id)
   } else {
     req.user = 0
   }
+  // console.log(req.user)
   next() 
 }) 
 app.use(morgan('dev'))
@@ -35,7 +36,7 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/urls', (req, res) => {
-  let data = urlDatabase.getAll()
+  let data = urlDatabase.getAll(req.user)
   res.render('urls_index', {url: data, user: req.user})
 })
 
@@ -44,8 +45,14 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  let id = urlDatabase.addPair(req.body.longURL).short
-  res.redirect(`/urls/${id}`);   
+  if (req.user != 0){
+    // console.log(req.body)
+    key = urlDatabase.addPair(req.user.id, req.body.longURL)
+    // console.log(`req.key now = ${req.params.id}`)
+    res.redirect(`/urls/${key}`);   
+  } else {
+    res.redirect('login')
+  }
 });
 
 app.get("/u/:id", (req, res) => {
@@ -53,7 +60,7 @@ app.get("/u/:id", (req, res) => {
   res.status(307).redirect(url.long)
 })
 
-app.get("/urls/:id/edit", (req, res) => {
+app.get("/:id/edit", (req, res) => {
   // console.log(req.params.id)
   let url = urlDatabase.getSingle(req.params.id)
   res.render('urls_edit', {url: url, user: req.user})
@@ -65,8 +72,9 @@ app.patch('/urls/:id', (req, res) => {
 })
 
 app.get("/urls/:id", (req, res) => {
-  // console.log(req.params.id)
+  // console.log(`key ${req.key}`)
   let url = urlDatabase.getSingle(req.params.id)
+  console.log(url)
   res.render('urls_show', {url: url, user: req.user})
 })
 

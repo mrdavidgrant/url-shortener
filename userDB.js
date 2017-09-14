@@ -37,11 +37,13 @@ function getUser (userInfo) {
       break
     }
   }
+  return false
 }
 
 function verifyUser (email, password) {
   let user = getUser(email)
-  if (user.password === password) {
+  // console.log(user)
+  if (user && user.password === password) {
     return true
   } else {
     return false

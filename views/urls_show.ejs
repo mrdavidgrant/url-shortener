@@ -8,7 +8,9 @@
     <!-- Add your EJS code here -->
     <div>
       <p><a href="/u/<%= url.short %>"><%= url.short %></a> : <a href="<%= url.long %>"><%= url.long %></a></p>
+      <p>Send this link to a friend:<br>
+      <a href="u/<%= url.short %>">localhost:8080/u/<%= url.short %></a></p>
 
-    <a href="/urls/new">Click here</a> to add a new shortened link!
+    <p><a href="/urls/new">Click here</a> to add a new shortened link!</p>
 </body>
 </html>

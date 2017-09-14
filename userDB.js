@@ -1,10 +1,12 @@
 const apps = require('./apps')
+const bcrypt = require('bcrypt')
 
 const users = {
-  RODNFT4X:
-  { id: 'RODNFT4X',
+  yBYShb4N: { 
+    id: 'yBYShb4N',
     email: 'mrdavidgrant@outlook.com',
-    password: 'asdf' }
+    password: '$2a$10$FYv/e39jGblFduKsrEwxn.iXkdv2T7N1HRmXgNnz.41Ju7s1.uMNq' 
+  }
 }
 
 function addUser (email, password) {
@@ -12,8 +14,9 @@ function addUser (email, password) {
   users[id] = {
     id: id,
     email: email,
-    password: password
+    password: bcrypt.hashSync(password, 10)
   }
+  console.log('User Added: ', users[id])
   return users[id]
 }
 
@@ -43,7 +46,7 @@ function getUser (userInfo) {
 function verifyUser (email, password) {
   let user = getUser(email)
   // console.log(user)
-  if (user && user.password === password) {
+  if (user && bcrypt.compareSync(password, user.password)) {
     return true
   } else {
     return false

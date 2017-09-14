@@ -1,4 +1,5 @@
-`use strict`
+'use strict'
+
 const express = require('express')
 let morgan = require('morgan')
 const bodyParser = require("body-parser");
@@ -105,11 +106,10 @@ app.post('/logout', (req, res) => {
 
 app.post('/register', (req, res) => {
   let verified = userDB.verify(req.body.email, req.body.password)
-  console.log(verified)
   if (verified[0] != 200) {
     res.status(verified[0]).send(verified[1])
   } else {
-    id = userDB.addUser(req.body.email, req.body.password)
+    let id = userDB.addUser(req.body.email, req.body.password)
     console.log('ID Created:', id.email)
     res.cookie('user_id', id.id)
     res.redirect('/urls')

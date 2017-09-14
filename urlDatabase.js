@@ -3,12 +3,12 @@ const apps = require('./apps')
 let urlDatabase = {
   'b2xVn2': {
     short: 'b2xVn2',
-    user: 'RODNFT4X',
+    user: 'yBYShb4N',
     long: "http://www.lighthouselabs.ca"
   },
   '9sm5xK': {
     short: '9sm5xK',
-    user: 'RODNFT4X',
+    user: 'yBYShb4N',
     long: "http://www.google.com"
   }
 }

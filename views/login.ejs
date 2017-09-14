@@ -3,11 +3,12 @@
   <head></head>
   <body style="font-size:20px; padding:50px; width:100%">
     <%- include('partials/_header') %>
-    <br><form action="/login" method="POST" style="margin:150px; align:left">
+    <h2> Please Log In to continue:</h2>
+    <form action="/login" method="POST" style="align:left">
       <label for="email">Enter your Email Address:</label>
       <input id="email" type="email" name="email" placeholder="youremail@here.com" style="width: 300px"><br>
       <label for="password">Enter your Password:</label>
-      <input id="password" type="password" name="password" style="width: 300px">
+      <input id="password" type="password" name="password" style="width: 300px"><br>
       <input type="submit" value="Submit">
     </form>
   </body>

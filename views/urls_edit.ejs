@@ -3,11 +3,13 @@
   <head></head>
   <body style="font-size:20px; padding:50px; width:100%">
     <%- include('partials/_header') %>
-    <h2>ShortURL: <%= url.short %>
-    <form action="/urls/<%= url.short %>?_method=PATCH" method="POST" style="margin:150px;">
-      <label for="longURL">Enter a URL:</label>
+    <h2>Edit your link</h2><strong>ShortURL:</strong> <%= url.short %> | 
+    <form action="/urls/<%= url.short %>?_method=PATCH" method="POST">
+      <label for="longURL"><strong> Enter a new URL:</strong></label>
       <input id="longURL" type="text" name="longURL" placeholder="<%= url.long %>" style="width: 300px">
       <input type="submit" value="Submit">
     </form>
+    <p>Send this link to a friend:<br>
+      <a href="u/<%= url.short %>">localhost:8080/u/<%= url.short %></a></p>
   </body>
 </html>

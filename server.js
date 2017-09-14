@@ -6,7 +6,6 @@ const urlDatabase = require('./urlDatabase')
 const methodOverride = require('method-override')
 const cookieParser = require('cookie-parser')
 const userDB = require('./userDB')
-const bcrypt = require('bcrypt');
 
 const app = express()
 
@@ -104,9 +103,7 @@ app.post('/register', (req, res) => {
   if (verified[0] != 200) {
     res.status(verified[0]).send(verified[1])
   } else {
-    let password = req.body.password
-    const hashedPassword = bcrypt.hashSync(password, 10);
-    id = userDB.addUser(req.body.email, hashedPassword)
+    id = userDB.addUser(req.body.email, req.body.password)
     console.log('ID Created:', id.email)
     res.cookie('user_id', id.id)
     res.redirect('/urls')
@@ -124,3 +121,6 @@ app.delete('/urls/:id/', (req, res) =>{
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`)
 })
+
+
+

@@ -5,7 +5,7 @@ let morgan = require('morgan')
 const bodyParser = require("body-parser");
 const urlDatabase = require('./urlDatabase')
 const methodOverride = require('method-override')
-const cookieParser = require('cookie-parser')
+const cookieSession = require('cookie-session')
 const userDB = require('./userDB')
 
 const app = express()
@@ -16,19 +16,25 @@ app.set('view engine', 'ejs')
 
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({extended: true}))
-app.use(cookieParser())
+app.use(cookieSession({
+  name: 'user_id',
+  keys: ['asdlfiv vsagfjsahfvakjsdfhsnkvdjgnhskdglsvdhngsdgh bsdlkfghsvnaslkfdjvhngsdkghsdngvksdhn', 'asfdlkjfsahsadfas'],
+
+  // Cookie Options
+}))
 app.use(function (req, res, next) {
   if (req.path === '/login' || req.path === '/register' || req.path === '/u/:id') {
     next()
     return
   }
 
-  const currentUser = req.cookies.user_id
+  const currentUser = req.session.user_id
+  console.log(currentUser)
   if (currentUser) {
     req.user = userDB.getUser(currentUser)
     next()
   } else {
-    req.user = null
+    req.user = 0
     res.redirect('/login')
   }
 }) 
@@ -85,14 +91,14 @@ app.post("/urls", (req, res) => {
     // console.log(`req.key now = ${req.params.id}`)
     res.redirect(`/urls/${key}`);   
   } else {
-    res.redirect('login')
+    res.redirect('/login')
   }
 })
 
 app.post('/login', (req, res) => {
   if (userDB.verifyUser(req.body.email, req.body.password)) {
     let user = userDB.getUser(req.body.email)
-    res.cookie('user_id', user.id)
+    req.session.user_id = user.id
     res.redirect('/urls')
   } else {
     res.redirect('/login')
@@ -100,7 +106,7 @@ app.post('/login', (req, res) => {
 })
 
 app.post('/logout', (req, res) => {
-  res.clearCookie('user_id', req.cookies.user_id)
+  req.session = null
   res.redirect('/urls')
 })
 
@@ -111,7 +117,7 @@ app.post('/register', (req, res) => {
   } else {
     let id = userDB.addUser(req.body.email, req.body.password)
     console.log('ID Created:', id.email)
-    res.cookie('user_id', id.id)
+    req.session.user_id = id.id
     res.redirect('/urls')
   }
 })

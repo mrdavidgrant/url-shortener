@@ -16,14 +16,20 @@ app.set('view engine', 'ejs')
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
-app.use((req, res, next) => { 
-  if (userDB.getUser(req.cookies.user_id)) {
-    req.user = userDB.getUser(req.cookies.user_id)
-  } else {
-    req.user = 0
+app.use(function (req, res, next) {
+  if (req.path === '/login' || req.path === '/register' || req.path === '/u/:id') {
+    next()
+    return
   }
-  // console.log(req.user)
-  next() 
+
+  const currentUser = req.cookies.user_id
+  if (currentUser) {
+    req.user = userDB.getUser(currentUser)
+    next()
+  } else {
+    req.user = null
+    res.redirect('/login')
+  }
 }) 
 app.use(morgan('dev'))
 

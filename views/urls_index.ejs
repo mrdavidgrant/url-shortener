@@ -5,9 +5,6 @@
     <%- include('partials/_header') %>
     <!-- Add your EJS code here -->
     <ul >
-    <% if (user == 0) { %>
-    Please <a href="./login">login</a> to view your URLs
-    <% } else { %>
      <% for (key in url) { %>
         <% if (url[key].user == user.id) { %>
             <li><a href="/urls/<%= key %>"><%= key %></a> : <a href="<%= url[key].long %>"><%= url[key].long %></a> : <a href="/<%= key %>/edit">Edit</a> <form button type="submit" method="POST" action="/urls/<%= key %>?_method=DELETE"><input type='submit' value="Delete"></form></li>
@@ -15,6 +12,5 @@
     </ul>
 
     <a href="/urls/new">Click here</a> to add a new shortened link!
-    <% } %>   
 </body>
 </html>

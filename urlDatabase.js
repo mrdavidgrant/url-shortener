@@ -13,7 +13,7 @@ let urlDatabase = {
   }
 }
 
-function getAll() {
+function getAll(user) {
   return urlDatabase
 }
 

@@ -8,8 +8,22 @@
     <!-- Add your EJS code here -->
     <div>
       <p><a href="/u/<%= url.short %>"><%= url.short %></a> : <a href="<%= url.long %>"><%= url.long %></a></p>
+      <p>This link has been visited by <%= url.visitedBy.length %> people a total of <%= url.visited %> times!
+      <table style="border: 1px solid black">
+        <tr style="border: 1px solid black">
+          <th style="border: 1px solid black">UID</th>
+          <th style="border: 1px solid black">Timestamp</th>
+        </tr>
+      <% for (visit in url.visits) { %>
+        <tr>
+          <td style="border: 1px solid black"><%= url.visits[visit][0] %></td>
+          <td style="border: 1px solid black"><%= url.visits[visit][1] %></td>
+        </tr>
+      <% } %>
+      </table>
+
       <p>Send this link to a friend:<br>
-      <a href="u/<%= url.short %>">localhost:8080/u/<%= url.short %></a></p>
+      <a href="/u/<%= url.short %>">localhost:8080/u/<%= url.short %></a></p>
 
     <p><a href="/urls/new">Click here</a> to add a new shortened link!</p>
 </body>

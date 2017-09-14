@@ -4,12 +4,18 @@ let urlDatabase = {
   'b2xVn2': {
     short: 'b2xVn2',
     user: 'yBYShb4N',
-    long: "http://www.lighthouselabs.ca"
+    long: "http://www.lighthouselabs.ca",
+    visited: 0,
+    visitedBy: [],
+    visits: [],
   },
   '9sm5xK': {
     short: '9sm5xK',
     user: 'yBYShb4N',
-    long: "http://www.google.com"
+    long: "http://www.google.com",
+    visited: 0,
+    visitedBy: [],
+    visits: []
   }
 }
 
@@ -23,7 +29,10 @@ function addPair (user, url) {
   urlDatabase[key] = {
     short: key,
     long: url,
-    user: user
+    user: user,
+    visited: 0,
+    visitedBy: [],
+    visits: []
   }
   return key
 }
@@ -42,19 +51,29 @@ function getSingle(info) {
   let url = {}
   for (key in urlDatabase) {
     if (key == info || urlDatabase[key] === info) {
-      url.short = key
-      url.long = urlDatabase[key].long
+      url = urlDatabase[key]
       break
     }
   }
-  console.log(url)
   return url
 }
 
+function track (url, uid) {
+  urlDatabase[url.short].visited++
+  if (!urlDatabase[url.short].visitedBy.includes(uid)) {
+    urlDatabase[url.short].visitedBy.push(uid)
+  }
+  let visit = [uid, Date().toString()]
+  urlDatabase[url.short].visits.push(visit)
+  console.log(`Tracked! Visited by ${urlDatabase[url.short].visitedBy} for ${urlDatabase[url.short].visited} total visits`)
+  return
+}
+
 module.exports = {
-  getAll : getAll,
-  addPair : addPair,
-  editPair : editPair,
-  deletePair : deletePair,
-  getSingle : getSingle
+  getAll: getAll,
+  addPair: addPair,
+  editPair: editPair,
+  deletePair: deletePair,
+  getSingle: getSingle,
+  track:track
 }

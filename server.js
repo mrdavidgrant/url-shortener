@@ -7,6 +7,7 @@ const urlDatabase = require('./urlDatabase')
 const methodOverride = require('method-override')
 const cookieSession = require('cookie-session')
 const userDB = require('./userDB')
+const apps = require('./apps')
 
 const app = express()
 
@@ -19,15 +20,28 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieSession({
   name: 'user_id',
   keys: ['asdlfiv vsagfjsahfvakjsdfhsnkvdjgnhskdglsvdhngsdgh bsdlkfghsvnaslkfdjvhngsdkghsdngvksdhn', 'asfdlkjfsahsadfas'],
-
-  // Cookie Options
+}))
+app.use(cookieSession({
+  name: 'uid',
+  keys: ['asdlfiv vsagfjsahfvakjsdfhsnkvdjgnhskdglsvdhngsdgh bsdlkfghsvnaslkfdjvhngsdkghsdngvksdhn', 'asfdlkjfsahsadfas'],
 }))
 app.use(function (req, res, next) {
-  if (req.path === '/login' || req.path === '/register' || req.path === '/u/:id') {
+  if (req.path === '/login' || req.path === '/register' || req.path.startsWith('/u/')) {
+    if (req.session.uid) {
+      req.uid = req.session.uid
+    } else {
+      req.uid = apps.random(10)
+      req.session.uid = req.uid
+    }
     next()
     return
   }
-
+  if (req.session.uid) {
+    req.uid = req.session.uid
+  } else {
+    req.uid = apps.random(10)
+    req.session.uid = req.uid
+  }
   const currentUser = req.session.user_id
   console.log(currentUser)
   if (currentUser) {
@@ -59,6 +73,7 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/u/:id", (req, res) => {
   let url = urlDatabase.getSingle(req.params.id)
+  urlDatabase.track(url, req.uid)
   res.status(307).redirect(url.long)
 })
 

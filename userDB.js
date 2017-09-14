@@ -43,7 +43,7 @@ function getUser (userInfo) {
 function verifyUser (email, password) {
   let user = getUser(email)
   // console.log(user)
-  if (user && user.password === password) {
+  if (user && bcrypt.compareSync(password, user.password)) {
     return true
   } else {
     return false

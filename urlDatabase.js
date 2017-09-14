@@ -19,12 +19,13 @@ let urlDatabase = {
   }
 }
 
+// Return all DB urls
 function getAll(user) {
   return urlDatabase
 }
 
+// add URL pair
 function addPair (user, url) {
-  console.log(`User: ${user}, URL ${url}`)
   key = apps.random(6)
   urlDatabase[key] = {
     short: key,
@@ -37,16 +38,19 @@ function addPair (user, url) {
   return key
 }
 
+// edit pair
 function editPair (id, long) {
   urlDatabase[id].long = long
   return getSingle(id)
 }
 
+// delete a pair
 function deletePair (id) {
   delete urlDatabase[id]
   return true
 }
 
+// return a single URL information
 function getSingle(info) {
   let url = {}
   for (key in urlDatabase) {
@@ -58,6 +62,7 @@ function getSingle(info) {
   return url
 }
 
+// Analytics
 function track (url, uid) {
   urlDatabase[url.short].visited++
   if (!urlDatabase[url.short].visitedBy.includes(uid)) {
@@ -65,7 +70,6 @@ function track (url, uid) {
   }
   let visit = [uid, Date().toString()]
   urlDatabase[url.short].visits.push(visit)
-  console.log(`Tracked! Visited by ${urlDatabase[url.short].visitedBy} for ${urlDatabase[url.short].visited} total visits`)
   return
 }
 

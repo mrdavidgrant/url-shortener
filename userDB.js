@@ -9,6 +9,7 @@ const users = {
   }
 }
 
+// Function to add user
 function addUser (email, password) {
   let id = apps.random(8)
   users[id] = {
@@ -16,10 +17,10 @@ function addUser (email, password) {
     email: email,
     password: bcrypt.hashSync(password, 10)
   }
-  console.log('User Added: ', users[id])
   return users[id]
 }
 
+// Function to verify input on registration page
 function verify (email, password) {
   if (!email || !password) {
     return [400, 'Please enter valid email and password']
@@ -33,6 +34,7 @@ function verify (email, password) {
   return [200]
 }
 
+// Function to return single user from DB
 function getUser (userInfo) {
   for (id in users) {
     if (users[id].id == userInfo || users[id].email == userInfo) {
@@ -43,9 +45,9 @@ function getUser (userInfo) {
   return false
 }
 
+// Function to authenticate login
 function verifyUser (email, password) {
   let user = getUser(email)
-  // console.log(user)
   if (user && bcrypt.compareSync(password, user.password)) {
     return true
   } else {

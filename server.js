@@ -1,14 +1,13 @@
 'use strict'
 
 const express = require('express')
-let morgan = require('morgan')
-const bodyParser = require("body-parser");
+const morgan = require('morgan')
+const bodyParser = require("body-parser")
 const urlDatabase = require('./urlDatabase')
 const methodOverride = require('method-override')
 const cookieSession = require('cookie-session')
 const userDB = require('./userDB')
 const apps = require('./apps')
-
 const app = express()
 
 const PORT = process.env.PORT || 8080
@@ -17,14 +16,17 @@ app.set('view engine', 'ejs')
 
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({extended: true}))
+// Create User ID for authenticated users
 app.use(cookieSession({
   name: 'user_id',
   keys: ['asdlfiv vsagfjsahfvakjsdfhsnkvdjgnhskdglsvdhngsdgh bsdlkfghsvnaslkfdjvhngsdkghsdngvksdhn', 'asfdlkjfsahsadfas'],
 }))
+// Create unique ID for all users for analytics
 app.use(cookieSession({
   name: 'uid',
   keys: ['asdlfiv vsagfjsahfvakjsdfhsnkvdjgnhskdglsvdhngsdgh bsdlkfghsvnaslkfdjvhngsdkghsdngvksdhn', 'asfdlkjfsahsadfas'],
 }))
+// Middleware to ensure login and/or set cookies
 app.use(function (req, res, next) {
   if (req.path === '/login' || req.path === '/register' || req.path.startsWith('/u/')) {
     if (req.session.uid) {
@@ -43,7 +45,6 @@ app.use(function (req, res, next) {
     req.session.uid = req.uid
   }
   const currentUser = req.session.user_id
-  console.log(currentUser)
   if (currentUser) {
     req.user = userDB.getUser(currentUser)
     next()
@@ -54,6 +55,8 @@ app.use(function (req, res, next) {
 }) 
 app.use(morgan('dev'))
 
+
+// GET, POST, PATCH, DELETE routing
 app.get('/', (req, res) => {
   res.redirect('/urls')
 })
@@ -68,8 +71,8 @@ app.get('/urls', (req, res) => {
 })
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new", {user: req.user});
-});
+  res.render("urls_new", {user: req.user})
+})
 
 app.get("/u/:id", (req, res) => {
   let url = urlDatabase.getSingle(req.params.id)
@@ -78,15 +81,12 @@ app.get("/u/:id", (req, res) => {
 })
 
 app.get("/:id/edit", (req, res) => {
-  // console.log(req.params.id)
   let url = urlDatabase.getSingle(req.params.id)
   res.render('urls_edit', {url: url, user: req.user})
 })
 
 app.get("/urls/:id", (req, res) => {
-  // console.log(`key ${req.key}`)
   let url = urlDatabase.getSingle(req.params.id)
-  console.log(url)
   res.render('urls_show', {url: url, user: req.user})
 })
 
@@ -101,10 +101,8 @@ app.patch('/urls/:id', (req, res) => {
 
 app.post("/urls", (req, res) => {
   if (req.user != 0){
-    // console.log(req.body)
     key = urlDatabase.addPair(req.user.id, req.body.longURL)
-    // console.log(`req.key now = ${req.params.id}`)
-    res.redirect(`/urls/${key}`);   
+    res.redirect(`/urls/${key}`)
   } else {
     res.redirect('/login')
   }
@@ -121,7 +119,7 @@ app.post('/login', (req, res) => {
 })
 
 app.post('/logout', (req, res) => {
-  req.session = null
+  req.session.user_id = null
   res.redirect('/urls')
 })
 
@@ -131,7 +129,6 @@ app.post('/register', (req, res) => {
     res.status(verified[0]).send(verified[1])
   } else {
     let id = userDB.addUser(req.body.email, req.body.password)
-    console.log('ID Created:', id.email)
     req.session.user_id = id.id
     res.redirect('/urls')
   }
